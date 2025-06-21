@@ -1,9 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -43,6 +40,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Base theme variables */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -112,11 +110,16 @@
   --sidebar-ring: oklch(0.553 0.013 58.071);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
