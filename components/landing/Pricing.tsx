@@ -8,7 +8,7 @@ import Link from 'next/link'
 const plans = [
 	{
 		name: 'Free',
-		price: '$0',
+		price: '₹0',
 		period: '/month',
 		description: 'Perfect for trying out PixelPrompt',
 		features: [
@@ -22,7 +22,7 @@ const plans = [
 	},
 	{
 		name: 'Pro',
-		price: '$19',
+		price: '₹19',
 		period: '/month',
 		description: 'For serious creators and professionals',
 		features: [
@@ -38,7 +38,7 @@ const plans = [
 	},
 	{
 		name: 'Enterprise',
-		price: '$99',
+		price: '₹99',
 		period: '/month',
 		description: 'For teams and high-volume usage',
 		features: [

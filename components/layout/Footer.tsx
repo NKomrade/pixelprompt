@@ -11,7 +11,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center border border-primary/20 shadow-sm">
                 <span className="text-primary-foreground font-bold text-lg">P</span>
               </div>
               <span className="font-bold text-xl">PixelPrompt</span>

@@ -17,51 +17,54 @@ const Navbar = () => {
     setIsOpen(false)
   }
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+    closeMenu()
+  }
+
   return (
     <nav className="w-full px-4 py-4 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-primary">
-          PixelPrompt
+        <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center border border-primary/20 shadow-sm">
+            <span className="text-primary-foreground font-bold text-lg">P</span>
+          </div>
+          
+          <span className="font-bold text-xl">PixelPrompt</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link 
-            href="/dashboard" 
-            className="text-foreground/80 hover:text-primary transition-colors duration-200"
+          <button 
+            onClick={() => scrollToSection('features')}
+            className="text-foreground/80 hover:text-primary transition-colors duration-200 cursor-pointer"
           >
-            Dashboard
-          </Link>
-          <Link 
-            href="/projects" 
-            className="text-foreground/80 hover:text-primary transition-colors duration-200"
+            Features
+          </button>
+          <button 
+            onClick={() => scrollToSection('about')}
+            className="text-foreground/80 hover:text-primary transition-colors duration-200 cursor-pointer"
           >
-            Projects
-          </Link>
-          <Link 
-            href="/gallery" 
-            className="text-foreground/80 hover:text-primary transition-colors duration-200"
+            About
+          </button>
+          <button 
+            onClick={() => scrollToSection('pricing')}
+            className="text-foreground/80 hover:text-primary transition-colors duration-200 cursor-pointer"
           >
-            Gallery
-          </Link>
-          <Link 
-            href="/settings" 
-            className="text-foreground/80 hover:text-primary transition-colors duration-200"
-          >
-            Settings
-          </Link>
+            Plans
+          </button>
         </div>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" asChild>
-            <Link href="/profile">Profile</Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="/logout">Logout</Link>
-          </Button>
+        <div className="hidden md:flex items-center space-x-4 cursor-pointer">
           <ModeToggle />
+          <Button variant="outline" asChild>
+            <Link href="/register">Register</Link>
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -95,42 +98,29 @@ const Navbar = () => {
         }`}
       >
         <div className="pt-4 pb-2 space-y-2">
-          <Link 
-            href="/dashboard" 
-            onClick={closeMenu}
-            className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
+          <button 
+            onClick={() => scrollToSection('features')}
+            className="block w-full text-left px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
           >
-            Dashboard
-          </Link>
-          <Link 
-            href="/projects" 
-            onClick={closeMenu}
-            className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
+            Features
+          </button>
+          <button 
+            onClick={() => scrollToSection('about')}
+            className="block w-full text-left px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
           >
-            Projects
-          </Link>
-          <Link 
-            href="/gallery" 
-            onClick={closeMenu}
-            className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
+            About
+          </button>
+          <button 
+            onClick={() => scrollToSection('pricing')}
+            className="block w-full text-left px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
           >
-            Gallery
-          </Link>
-          <Link 
-            href="/settings" 
-            onClick={closeMenu}
-            className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-all duration-200"
-          >
-            Settings
-          </Link>
+            Plans
+          </button>
           
           {/* Mobile Actions */}
           <div className="pt-4 border-t border-border/50 space-y-2">
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/profile" onClick={closeMenu}>Profile</Link>
-            </Button>
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/logout" onClick={closeMenu}>Logout</Link>
+              <Link href="/register" onClick={closeMenu}>Register</Link>
             </Button>
           </div>
         </div>

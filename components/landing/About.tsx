@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Users, Target, Zap, Award } from 'lucide-react'
+import { Users, Target, Zap, Award, Sparkles, Brain, Camera, Palette } from 'lucide-react'
 
 const stats = [
   {
@@ -25,6 +25,13 @@ const stats = [
   }
 ]
 
+const features = [
+  { icon: Brain, label: 'AI Models' },
+  { icon: Sparkles, label: 'High Quality' },
+  { icon: Zap, label: 'Fast Processing' },
+  { icon: Palette, label: 'Creative Tools' }
+]
+
 export const About = () => {
   return (
     <section id="about" className="container mx-auto px-4 py-16 lg:py-24">
@@ -38,10 +45,6 @@ export const About = () => {
             At PixelPrompt, we believe everyone deserves access to powerful creative tools. 
             Our cutting-edge AI technology transforms simple text descriptions into stunning, 
             professional-quality images that bring your imagination to life.
-          </p>
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-            Founded by a team of AI researchers and creative professionals, we're on a mission 
-            to democratize visual content creation and empower creators worldwide.
           </p>
           
           {/* Stats Grid */}
@@ -58,39 +61,36 @@ export const About = () => {
           </div>
         </div>
         
-        {/* Right Content - Visual */}
-        <div className="order-1 lg:order-2">
-          <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-primary/20 via-purple-500/20 to-pink-500/20 rounded-2xl">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="grid grid-cols-2 gap-4 p-8 w-full h-full">
-                  <div className="bg-background/80 backdrop-blur rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-primary/20 rounded-lg mx-auto mb-2"></div>
-                      <div className="text-xs text-muted-foreground">AI Models</div>
+        {/* Right Visual */}
+        <div className="relative">
+          {/* Main Visual Container */}
+          <div className="relative aspect-square">
+            {/* Outer ring */}
+            <div className="absolute inset-0 border-2 border-primary/20 rounded-full animate-spin-slow"></div>
+            <div className="absolute inset-4 border border-primary/10 rounded-full animate-spin-reverse"></div>
+            
+            {/* Center content */}
+            <div className="absolute inset-8 bg-gradient-to-br from-background/80 to-background/20 backdrop-blur-sm rounded-full border border-border">
+              <div className="h-full flex items-center justify-center">
+                <div className="grid grid-cols-2 gap-6 p-8">
+                  {features.map((feature, index) => (
+                    <div 
+                      key={index} 
+                      className="group flex flex-col items-center p-4 bg-card/80 backdrop-blur border border-border rounded-xl hover:bg-accent/50 hover:border-primary/20 transition-all duration-300 hover:scale-105"
+                      >
+                      <feature.icon className="w-8 h-8 mb-3 text-primary group-hover:scale-110 transition-transform duration-300" />
+                      <span className="text-xs text-muted-foreground text-center font-medium">{feature.label}</span>
                     </div>
-                  </div>
-                  <div className="bg-background/80 backdrop-blur rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-green-500/20 rounded-lg mx-auto mb-2"></div>
-                      <div className="text-xs text-muted-foreground">High Quality</div>
-                    </div>
-                  </div>
-                  <div className="bg-background/80 backdrop-blur rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-blue-500/20 rounded-lg mx-auto mb-2"></div>
-                      <div className="text-xs text-muted-foreground">Fast Processing</div>
-                    </div>
-                  </div>
-                  <div className="bg-background/80 backdrop-blur rounded-lg p-4 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-orange-500/20 rounded-lg mx-auto mb-2"></div>
-                      <div className="text-xs text-muted-foreground">Creative Tools</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
+              
+            {/* Floating elements */}
+            <div className="absolute -top-4 -right-4 w-6 h-6 bg-white rounded-full animate-bounce delay-300"></div>
+            <div className="absolute -bottom-4 -left-4 w-4 h-4 bg-white/70 rounded-full animate-bounce delay-700"></div>
+            <div className="absolute top-1/4 -left-8 w-3 h-3 bg-white/50 dark:bg-white/50 rounded-full animate-pulse"></div>
+            
           </div>
         </div>
       </div>

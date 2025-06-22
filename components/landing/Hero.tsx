@@ -15,7 +15,7 @@ export const Hero = () => {  return (
         
         <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight">
           Transform Your Ideas Into
-          <span className="block mt-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <span className="block mt-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text">
             Stunning Images
           </span>
         </h1>
@@ -29,7 +29,7 @@ export const Hero = () => {  return (
           <Button size="lg" className="text-base lg:text-lg px-6 lg:px-8 w-full sm:w-auto" asChild>
             <Link href="/register">
               Start Creating Now
-              <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 ml-2 animate-pulse" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" className="text-base lg:text-lg px-6 lg:px-8 w-full sm:w-auto" asChild>
