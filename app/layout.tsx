@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "./providers";
-import Navbar from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ConditionalNavbar } from "@/components/layout/ConditionalNavbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +28,7 @@ export default function RootLayout({
           enableSystem
         >
           <Providers>
-            <Navbar />
+            <ConditionalNavbar />
             <main>{children}</main>
             <Footer />
           </Providers>
