@@ -1,8 +1,6 @@
 import React from 'react'
 
-type Props = {}
-
-const GeneratedImage = (props: Props) => {
+const GeneratedImage = () => {
   return (
     <div>GeneratedImage</div>
   )

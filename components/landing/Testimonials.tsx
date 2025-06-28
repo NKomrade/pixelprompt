@@ -26,9 +26,7 @@ const testimonials = [
   }
 ]
 
-type Props = {}
-
-const Testimonials = (props: Props) => {
+const Testimonials = () => {
   return (
     <section className="container mx-auto px-4 py-20">
       <div className="text-center mb-16">
@@ -49,7 +47,7 @@ const Testimonials = (props: Props) => {
                   <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-muted-foreground mb-6">"{testimonial.content}"</p>
+              <p className="text-muted-foreground mb-6">&quot;{testimonial.content}&quot;</p>
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                   <span className="text-primary-foreground font-semibold text-sm">

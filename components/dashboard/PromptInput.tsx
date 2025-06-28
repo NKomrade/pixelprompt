@@ -1,8 +1,6 @@
 import React from 'react'
 
-type Props = {}
-
-const PromptInput = (props: Props) => {
+const PromptInput = () => {
   return (
     <div>PromptInput</div>
   )

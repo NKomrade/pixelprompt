@@ -35,14 +35,12 @@ const sampleImages = [
   }
 ]
 
-type Props = {}
-
-const Samples = (props: Props) => {
+const Samples = () => {
   return (
     <section id="samples" className="container mx-auto px-4 py-20 bg-secondary/20">
       <div className="text-center mb-16">
         <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-          See What's Possible
+          See What&apos;s Possible
         </h2>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Explore different styles and possibilities with our AI image generation
@@ -61,10 +59,9 @@ const Samples = (props: Props) => {
                   </Badge>
                 </div>
               </div>
-            </div>
-            <CardContent className="p-4">
+            </div>            <CardContent className="p-4">
               <p className="text-sm text-muted-foreground">
-                "{sample.prompt}"
+                &quot;{sample.prompt}&quot;
               </p>
             </CardContent>
           </Card>

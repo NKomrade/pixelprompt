@@ -1,8 +1,6 @@
 import React from 'react'
 
-type Props = {}
-
-const CreditBadge = (props: Props) => {
+const CreditBadge = () => {
   return (
     <div>CreditBadge</div>
   )
