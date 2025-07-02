@@ -13,6 +13,10 @@ export function ModeToggle() {
     setMounted(true)
   }, [])
 
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
+
   if (!mounted) {
     return (
       <Button
@@ -21,14 +25,12 @@ export function ModeToggle() {
         className="h-9 w-9"
         disabled
       >
-        <div className="h-4 w-4" />
+        <Sun className="h-4 w-4" />
         <span className="sr-only">Toggle theme</span>
       </Button>
     )
   }
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
+
   return (
     <Button
       variant="ghost"
@@ -36,8 +38,11 @@ export function ModeToggle() {
       onClick={toggleTheme}
       className="h-9 w-9"
     >
-      <Sun className={`h-4 w-4 transition-all duration-300 ${theme === 'light' ? '-rotate-90 scale-0' : 'rotate-0 scale-100'}`} />
-      <Moon className={`absolute h-4 w-4 transition-all duration-300 ${theme === 'light' ? 'rotate-0 scale-100' : 'rotate-90 scale-0'}`} />
+      {theme === 'dark' ? (
+        <Sun className="h-4 w-4 transition-all duration-300" />
+      ) : (
+        <Moon className="h-4 w-4 transition-all duration-300" />
+      )}
       <span className="sr-only">Toggle theme</span>
     </Button>
   )

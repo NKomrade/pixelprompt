@@ -12,9 +12,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { LogOut} from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import CreditBadge from '@/components/ui/credit-badge'
 import { ModeToggle } from '@/components/ui/mode-toggle'
+import ClientOnly from '@/components/ui/client-only'
 
 const DashboardNavbar = () => {
   const { data: session } = useSession()
@@ -27,7 +28,7 @@ const DashboardNavbar = () => {
 
   useEffect(() => {
     const fetchCredits = async () => {
-      if (session?.user?.email) {
+      if (session?.user?.email && mounted) {
         try {
           const response = await fetch('/api/user/credits')
           if (response.ok) {
@@ -40,17 +41,11 @@ const DashboardNavbar = () => {
       }
     }
 
-    if (mounted) {
-      fetchCredits()
-    }
+    fetchCredits()
   }, [session, mounted])
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
-  }
-
-  if (!mounted) {
-    return null
   }
 
   return (
@@ -66,48 +61,55 @@ const DashboardNavbar = () => {
 
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
-          <ModeToggle />
-          <CreditBadge credits={credits} />
+          <ClientOnly fallback={<div className="w-9 h-9" />}>
+            <ModeToggle />
+          </ClientOnly>
+          
+          <ClientOnly fallback={<div className="w-16 h-6 bg-muted rounded animate-pulse" />}>
+            <CreditBadge credits={credits} />
+          </ClientOnly>
 
           {/* User Profile */}
           {session?.user && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    {session?.user?.image && (
-                      <AvatarImage 
-                        src={session.user.image} 
-                        alt={session.user.name || 'Profile'}
-                        className="object-cover"
-                      />
-                    )}
-                    <AvatarFallback>
-                      {session?.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    {session?.user?.name && (
-                      <p className="font-medium">{session.user.name}</p>
-                    )}
-                    {session?.user?.email && (
-                      <p className="w-[200px] truncate text-sm text-muted-foreground">
-                        {session.user.email}
-                      </p>
-                    )}
+            <ClientOnly fallback={<div className="w-8 h-8 bg-muted rounded-full animate-pulse" />}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      {session?.user?.image && (
+                        <AvatarImage 
+                          src={session.user.image} 
+                          alt={session.user.name || 'Profile'}
+                          className="object-cover"
+                        />
+                      )}
+                      <AvatarFallback>
+                        {session?.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {session?.user?.name && (
+                        <p className="font-medium">{session.user.name}</p>
+                      )}
+                      {session?.user?.email && (
+                        <p className="w-[200px] truncate text-sm text-muted-foreground">
+                          {session.user.email}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ClientOnly>
           )}
         </div>
       </div>

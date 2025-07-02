@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Send, Loader2, ImageIcon, AlertCircle } from 'lucide-react'
+import ImageGenerationSkeleton from '@/components/ui/image-generation-skeleton'
+import { Send, Loader2, ImageIcon, AlertCircle, Download } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 const DashboardPage = () => {
   const { data: session, status } = useSession()
+  const [mounted, setMounted] = useState(false)
   const [prompt, setPrompt] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
@@ -16,10 +18,15 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch user credits
+  // Mount effect first
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Fetch user credits after mounting
   useEffect(() => {
     const fetchCredits = async () => {
-      if (session?.user?.email) {
+      if (session?.user?.email && mounted) {
         try {
           const response = await fetch('/api/user/credits')
           if (response.ok) {
@@ -35,10 +42,10 @@ const DashboardPage = () => {
     }
 
     fetchCredits()
-  }, [session])
+  }, [session, mounted])
 
-  // Handle authentication states after all hooks
-  if (status === 'loading') {
+  // Handle authentication states after mounting
+  if (!mounted || status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -96,6 +103,42 @@ const DashboardPage = () => {
     }
   }
 
+  const handleDownloadImage = async () => {
+    if (!generatedImage || !mounted) return
+
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      const filename = `pixelprompt-${timestamp}.jpg`
+      
+      // If it's a base64 image
+      if (generatedImage.startsWith('data:image/')) {
+        const link = document.createElement('a')
+        link.href = generatedImage
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      } else {
+        // If it's a URL, fetch and download
+        const response = await fetch(generatedImage)
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
+        
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        URL.revokeObjectURL(url)
+      }
+    } catch (error) {
+      console.error('Error downloading image:', error)
+      setError('Failed to download image')
+    }
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Welcome Section */}
@@ -124,13 +167,27 @@ const DashboardPage = () => {
       {/* Generated Image Display */}
       <Card className="w-full">
         <CardContent className="p-6">
-          <div className="aspect-square max-w-lg mx-auto bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-            {generatedImage ? (
-              <img
-                src={generatedImage}
-                alt="Generated image"
-                className="w-full h-full object-cover rounded-lg"
-              />
+          <div className="aspect-square max-w-lg mx-auto bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border relative">
+            {isGenerating ? (
+              <ImageGenerationSkeleton />
+            ) : generatedImage ? (
+              <div className="w-full h-full relative group">
+                <img
+                  src={generatedImage}
+                  alt="Generated image"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-end justify-end p-4 opacity-0 group-hover:opacity-100">
+                  <Button
+                    onClick={handleDownloadImage}
+                    size="sm"
+                    className="bg-white/90 text-black hover:bg-white"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </div>
+              </div>
             ) : (
               <div className="text-center space-y-4">
                 <ImageIcon className="w-16 h-16 mx-auto text-muted-foreground/50" />
@@ -147,9 +204,17 @@ const DashboardPage = () => {
       <Card className="w-full">
         <CardContent className="p-6">
           <div className="space-y-4">
-            <label htmlFor="prompt" className="text-sm font-medium">
-              Describe the image you want to generate
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="prompt" className="text-sm font-medium">
+                Describe the image you want to generate
+              </label>
+              {isGenerating && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Generating...</span>
+                </div>
+              )}
+            </div>
             <div className="flex gap-3">
               <textarea
                 id="prompt"
@@ -162,7 +227,7 @@ const DashboardPage = () => {
               />
               <Button
                 onClick={handleGenerateImage}
-                disabled={!prompt.trim() || isGenerating}
+                disabled={!prompt.trim() || isGenerating || credits < 1}
                 size="lg"
                 className="px-6 self-end"
               >
@@ -174,14 +239,22 @@ const DashboardPage = () => {
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    Generate
+                    Generate ({credits} credits)
                   </>
                 )}
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Press Enter to generate or click the Generate button. Be specific and descriptive for best results.
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">
+                Press Enter to generate or click the Generate button. Be specific and descriptive for best results.
+              </p>
+              {credits < 1 && (
+                <p className="text-xs text-red-500 flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  Insufficient credits
+                </p>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
