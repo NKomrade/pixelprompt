@@ -1,18 +1,46 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { ModeToggle } from '@/components/ui/mode-toggle'
-import { LogOut, User } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { User, LogOut, Settings } from 'lucide-react'
+import CreditBadge from '@/components/ui/credit-badge'
 import Image from 'next/image'
+import { ModeToggle } from '@/components/ui/mode-toggle'
 
 const DashboardNavbar = () => {
   const { data: session } = useSession()
+  const [credits, setCredits] = useState<number>(0)
 
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' })
+  useEffect(() => {
+    const fetchCredits = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch('/api/user/credits')
+          if (response.ok) {
+            const data = await response.json()
+            setCredits(data.credits)
+          }
+        } catch (error) {
+          console.error('Error fetching credits:', error)
+        }
+      }
+    }
+
+    fetchCredits()
+  }, [session])
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' })
   }
 
   return (
@@ -29,39 +57,53 @@ const DashboardNavbar = () => {
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
           <ModeToggle />
-          
+          <CreditBadge credits={credits} />
+
           {/* User Profile */}
           {session?.user && (
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <div className="flex items-center space-x-2">
-                {session.user.image ? (
-                  <Image
-                    src={session.user.image}
-                    alt={session.user.name || 'User'}
-                    width={32}
-                    height={32}
-                    className="rounded-full border border-border"
-                  />
-                ) : (
-                  <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>
+                      {session?.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    {session?.user?.name && (
+                      <p className="font-medium">{session.user.name}</p>
+                    )}
+                    {session?.user?.email && (
+                      <p className="w-[200px] truncate text-sm text-muted-foreground">
+                        {session.user.email}
+                      </p>
+                    )}
                   </div>
-                )}
-                <span className="text-sm font-medium hidden md:block">
-                  {session.user.name || 'User'}
-                </span>
-              </div>
-              
-              <Button
-                onClick={handleSignOut}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
-            </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/profile" className="flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/settings" className="flex items-center">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </div>

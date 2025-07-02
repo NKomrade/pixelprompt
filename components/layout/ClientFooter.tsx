@@ -1,11 +1,13 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import { Separator } from '@/components/ui/separator'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 
-export const Footer = () => {
+export const ClientFooter = () => {
   return (
-    <footer className="bg-secondary/10 border-t">
+    <footer className="bg-secondary/10 border-t" suppressHydrationWarning>
       <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
@@ -91,7 +93,7 @@ export const Footer = () => {
           </div>
         </div>
         
-        <Separator className="my-6 lg:my-8" suppressHydrationWarning />
+        <div className="my-6 lg:my-8 h-px bg-border" suppressHydrationWarning />
         
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
           <p className="text-muted-foreground text-xs lg:text-sm text-center sm:text-left">

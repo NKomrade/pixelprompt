@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Send, Loader2, ImageIcon } from 'lucide-react'
+import { Send, Loader2, ImageIcon, AlertCircle } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 const DashboardPage = () => {
@@ -12,8 +12,32 @@ const DashboardPage = () => {
   const [prompt, setPrompt] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
+  const [credits, setCredits] = useState<number>(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Redirect if not authenticated
+  // Fetch user credits
+  useEffect(() => {
+    const fetchCredits = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch('/api/user/credits')
+          if (response.ok) {
+            const data = await response.json()
+            setCredits(data.credits)
+          }
+        } catch (error) {
+          console.error('Error fetching credits:', error)
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchCredits()
+  }, [session])
+
+  // Handle authentication states after all hooks
   if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -27,18 +51,39 @@ const DashboardPage = () => {
   }
 
   const handleGenerateImage = async () => {
-    if (!prompt.trim()) return
+    if (!prompt.trim()) {
+      setError('Please enter a prompt')
+      return
+    }
+    
+    if (credits < 1) {
+      setError('Insufficient credits')
+      return
+    }
     
     setIsGenerating(true)
+    setError(null)
     try {
-      // TODO: Implement actual image generation API call
-      // For now, simulate the process
-      await new Promise(resolve => setTimeout(resolve, 3000))
-      
-      // Mock generated image URL
-      setGeneratedImage('https://via.placeholder.com/512x512/6366f1/white?text=Generated+Image')
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate image')
+      }
+
+      setGeneratedImage(data.imageUrl)
+      setCredits(data.remainingCredits)
+      setError(null)
     } catch (error) {
       console.error('Error generating image:', error)
+      setError(error instanceof Error ? error.message : 'Failed to generate image')
     } finally {
       setIsGenerating(false)
     }
@@ -59,6 +104,21 @@ const DashboardPage = () => {
         <p className="text-muted-foreground">
           Create stunning images with AI. Just describe what you want to see.
         </p>
+        {!loading && (
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="text-sm text-muted-foreground">Available Credits:</span>
+            <span className="font-semibold text-lg">{credits}</span>
+            {credits < 3 && (
+              <AlertCircle className="w-4 h-4 text-yellow-500" />
+            )}
+          </div>
+        )}
+        {error && (
+          <div className="flex items-center justify-center gap-2 mt-4 text-red-500">
+            <AlertCircle className="w-4 h-4" />
+            <span className="text-sm">{error}</span>
+          </div>
+        )}
       </div>
 
       {/* Generated Image Display */}
