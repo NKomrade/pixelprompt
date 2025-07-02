@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
     newUser: '/register'
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === 'google') {
         try {
           await connectDB()
@@ -80,8 +80,14 @@ export const authOptions: NextAuthOptions = {
               name: user.name,
               email: user.email,
               password: 'google-oauth', // placeholder for OAuth users
+              profilePicture: user.image || null,
               credits: 5,
               plan: 'basic'
+            })
+          } else if (!existingUser.profilePicture && user.image) {
+            // Update existing user with profile picture if they don't have one
+            await User.findByIdAndUpdate(existingUser._id, {
+              profilePicture: user.image
             })
           }
           
@@ -93,15 +99,28 @@ export const authOptions: NextAuthOptions = {
       }
       return true
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
+      }
+      if (account?.provider === 'google') {
+        // Fetch user data from database to get profile picture
+        try {
+          await connectDB()
+          const dbUser = await User.findOne({ email: token.email })
+          if (dbUser) {
+            token.profilePicture = dbUser.profilePicture
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error)
+        }
       }
       return token
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string
+        session.user.image = token.profilePicture as string || session.user.image
       }
       return session
     }

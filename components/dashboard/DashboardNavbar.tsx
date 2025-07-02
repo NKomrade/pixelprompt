@@ -11,15 +11,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { User, LogOut, Settings } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { LogOut} from 'lucide-react'
 import CreditBadge from '@/components/ui/credit-badge'
-import Image from 'next/image'
 import { ModeToggle } from '@/components/ui/mode-toggle'
 
 const DashboardNavbar = () => {
   const { data: session } = useSession()
   const [credits, setCredits] = useState<number>(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const fetchCredits = async () => {
@@ -36,11 +40,17 @@ const DashboardNavbar = () => {
       }
     }
 
-    fetchCredits()
-  }, [session])
+    if (mounted) {
+      fetchCredits()
+    }
+  }, [session, mounted])
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
@@ -65,6 +75,13 @@ const DashboardNavbar = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
+                    {session?.user?.image && (
+                      <AvatarImage 
+                        src={session.user.image} 
+                        alt={session.user.name || 'Profile'}
+                        className="object-cover"
+                      />
+                    )}
                     <AvatarFallback>
                       {session?.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                     </AvatarFallback>
@@ -84,19 +101,6 @@ const DashboardNavbar = () => {
                     )}
                   </div>
                 </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile" className="flex items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/settings" className="flex items-center">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
