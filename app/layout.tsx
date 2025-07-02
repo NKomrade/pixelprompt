@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "./providers";
 import { ConditionalNavbar } from "@/components/layout/ConditionalNavbar";
+import { Footer } from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <Providers>
             <ConditionalNavbar />
             <main>{children}</main>
+            <Footer />
           </Providers>
         </ThemeProvider>
       </body>
