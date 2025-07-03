@@ -37,7 +37,7 @@ export const Footer = () => {
           </div>
           
           {/* Product */}
-          <div>
+          <div suppressHydrationWarning>
             <h3 className="font-semibold mb-4 text-sm lg:text-base">Product</h3>
             <ul className="space-y-2 lg:space-y-3">
               <li>
@@ -64,7 +64,7 @@ export const Footer = () => {
           </div>
           
           {/* Company */}
-          <div>
+          <div suppressHydrationWarning>
             <h3 className="font-semibold mb-4 text-sm lg:text-base">Company</h3>
             <ul className="space-y-2 lg:space-y-3">
               <li>
@@ -93,11 +93,11 @@ export const Footer = () => {
         
         <Separator className="my-6 lg:my-8" suppressHydrationWarning />
         
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-          <p className="text-muted-foreground text-xs lg:text-sm text-center sm:text-left">
+        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0" suppressHydrationWarning>
+          <p className="text-muted-foreground text-xs lg:text-sm text-center lg:text-left">
             © 2024 PixelPrompt. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center sm:justify-end space-x-4 lg:space-x-6 text-xs lg:text-sm">
+          <div className="flex flex-wrap justify-center lg:justify-end space-x-4 lg:space-x-6 text-xs lg:text-sm">
             <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
             </Link>

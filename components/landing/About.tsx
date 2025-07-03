@@ -37,7 +37,7 @@ export const About = () => {
     <section id="about" className="container mx-auto px-4 py-16 lg:py-24">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* Left Content */}
-        <div className="order-2 lg:order-1">
+        <div>
           <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-6">
             Revolutionizing Creative Expression with AI
           </h2>
