@@ -1,7 +1,6 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar'
