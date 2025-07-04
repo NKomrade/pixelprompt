@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Users, Target, Zap, Award, Sparkles, Brain, Camera, Palette } from 'lucide-react'
+import { Users, Target, Zap, Award, Sparkles, Brain, Palette } from 'lucide-react'
 
 const stats = [
   {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ImageGenerationSkeleton from '@/components/ui/image-generation-skeleton'
@@ -172,10 +173,12 @@ const DashboardPage = () => {
               <ImageGenerationSkeleton />
             ) : generatedImage ? (
               <div className="w-full h-full relative group">
-                <img
+                <Image
                   src={generatedImage}
                   alt="Generated image"
-                  className="w-full h-full object-cover rounded-lg"
+                  fill
+                  className="object-cover rounded-lg"
+                  unoptimized
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-end justify-end p-4 opacity-0 group-hover:opacity-100">
                   <Button
