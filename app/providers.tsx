@@ -1,9 +1,10 @@
 'use client'
 
 import { SessionProvider } from 'next-auth/react'
+import { ReactNode } from 'react'
 
 interface ProvidersProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function Providers({ children }: ProvidersProps) {
@@ -13,3 +14,12 @@ export function Providers({ children }: ProvidersProps) {
     </SessionProvider>
   )
 }
+
+// Future: Add Razorpay Provider when implementing payments
+// export function PaymentProvider({ children }: { children: ReactNode }) {
+//   return (
+//     <div>
+//       {children}
+//     </div>
+//   )
+// }
