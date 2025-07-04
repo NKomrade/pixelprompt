@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/ui/mode-toggle'
@@ -9,11 +9,6 @@ import ClientOnly from '@/components/ui/client-only'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
@@ -29,25 +24,6 @@ const Navbar = () => {
       element.scrollIntoView({ behavior: 'smooth' })
     }
     closeMenu()
-  }
-
-  if (!mounted) {
-    return (
-      <nav className="w-full px-4 py-4 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50 transition-all duration-300">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center border border-primary/20 shadow-sm">
-              <span className="text-primary-foreground font-bold text-lg">P</span>
-            </div>
-            <span className="font-bold text-xl">PixelPrompt</span>
-          </Link>
-          <div className="hidden md:flex items-center space-x-4">
-            <div className="w-9 h-9 bg-muted rounded animate-pulse" />
-            <div className="w-20 h-9 bg-muted rounded animate-pulse" />
-          </div>
-        </div>
-      </nav>
-    )
   }
 
   return (
