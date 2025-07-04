@@ -29,7 +29,9 @@ export default function RootLayout({
         >
           <div suppressHydrationWarning>
             <Providers>
-              <ConditionalNavbar />
+              <div suppressHydrationWarning>
+                <ConditionalNavbar />
+              </div>
               <main>{children}</main>
               <Footer />
             </Providers>

@@ -31,13 +31,18 @@ export function ConditionalNavbar() {
     setMounted(true)
   }, [])
 
-  // Show loading navbar until mounted and session is determined
-  if (!mounted || status === 'loading') {
+  // Always show loading navbar on server-side and until mounted
+  if (!mounted) {
+    return <LoadingNavbar />
+  }
+
+  // Show loading navbar while session is being determined
+  if (status === 'loading') {
     return <LoadingNavbar />
   }
 
   // Show DashboardNavbar for authenticated users
-  if (session) {
+  if (status === 'authenticated' && session) {
     return <DashboardNavbar />
   }
 
