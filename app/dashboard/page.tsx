@@ -140,7 +140,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8" suppressHydrationWarning>
       {/* Welcome Section */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">Welcome back, {session?.user?.name}!</h1>

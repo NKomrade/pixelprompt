@@ -58,7 +58,7 @@ const plans = [
 
 export const Pricing = () => {
 	return (
-		<section id="pricing" className="container mx-auto px-4 py-20 bg-secondary/20">
+		<section id="pricing" className="container mx-auto px-4 py-20 bg-secondary/20" suppressHydrationWarning>
 			<div className="text-center mb-16">
 				<h2 className="text-3xl lg:text-4xl font-bold mb-4">
 					Simple, Transparent Pricing
@@ -68,7 +68,7 @@ export const Pricing = () => {
 				</p>
 			</div>
 			
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto" suppressHydrationWarning>
 				{plans.map((plan, index) => (
 					<Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-2xl scale-105' : 'border-border'}`}>
 						{plan.popular && (

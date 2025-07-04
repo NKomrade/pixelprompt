@@ -2,15 +2,21 @@
 
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import DashboardNavbar from '@/components/dashboard/DashboardNavbar'
 
 export function ConditionalNavbar() {
   const { data: session, status } = useSession()
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
 
-  // Show loading state or nothing while session is loading
-  if (status === 'loading') {
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Don't render anything until mounted to prevent hydration issues
+  if (!mounted || status === 'loading') {
     return null
   }
 

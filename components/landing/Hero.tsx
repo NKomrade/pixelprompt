@@ -2,16 +2,20 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import ClientOnly from '@/components/ui/client-only'
 
-export const Hero = () => {  return (
+export const Hero = () => {
+  return (
     <section className="container mx-auto px-4 py-16 lg:py-24 xl:py-32 text-center">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex items-center space-x-2 bg-secondary px-3 py-2 lg:px-4 lg:py-2 rounded-full">
-            <Sparkles className="w-3 h-3 lg:w-4 lg:h-4 text-primary" />
-            <span className="text-xs lg:text-sm font-medium">AI-Powered Image Generation</span>
+        <ClientOnly fallback={<div className="h-10 bg-muted rounded-full animate-pulse mb-6" />}>
+          <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center space-x-2 bg-secondary px-3 py-2 lg:px-4 lg:py-2 rounded-full">
+              <Sparkles className="w-3 h-3 lg:w-4 lg:h-4 text-primary" />
+              <span className="text-xs lg:text-sm font-medium">AI-Powered Image Generation</span>
+            </div>
           </div>
-        </div>
+        </ClientOnly>
         
         <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 leading-tight">
           Transform Your Ideas Into

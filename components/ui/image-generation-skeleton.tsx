@@ -3,7 +3,7 @@ import { Loader2, Sparkles } from 'lucide-react'
 
 const ImageGenerationSkeleton = () => {
   return (
-    <div className="w-full h-full relative overflow-hidden rounded-lg">
+    <div className="w-full h-full relative overflow-hidden rounded-lg" suppressHydrationWarning>
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-br from-muted/30 via-muted/60 to-muted/30 animate-pulse" />
       

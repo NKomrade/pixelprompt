@@ -6,7 +6,7 @@ import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 export const Footer = () => {
   return (
     <footer className="bg-secondary/10 border-t">
-      <div className="container mx-auto px-4 py-12 lg:py-16">
+      <div className="container mx-auto px-4 py-12 lg:py-16" suppressHydrationWarning>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-2">
