@@ -2,48 +2,37 @@
 
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useCredits } from '@/contexts/CreditContext'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ImageGenerationSkeleton from '@/components/ui/image-generation-skeleton'
+import LowCreditsModal from '@/components/ui/low-credits-modal'
 import { Send, Loader2, ImageIcon, AlertCircle, Download } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 const DashboardPage = () => {
   const { data: session, status } = useSession()
+  const { credits, loading: creditsLoading, updateCredits } = useCredits()
   const [mounted, setMounted] = useState(false)
   const [prompt, setPrompt] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
-  const [credits, setCredits] = useState<number>(0)
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showLowCreditsModal, setShowLowCreditsModal] = useState(false)
 
   // Mount effect first
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Fetch user credits after mounting
+  // Show low credits modal when credits are low
   useEffect(() => {
-    const fetchCredits = async () => {
-      if (session?.user?.email && mounted) {
-        try {
-          const response = await fetch('/api/user/credits')
-          if (response.ok) {
-            const data = await response.json()
-            setCredits(data.credits)
-          }
-        } catch (error) {
-          console.error('Error fetching credits:', error)
-        } finally {
-          setLoading(false)
-        }
-      }
+    if (credits < 3 && credits > 0 && !creditsLoading) {
+      setShowLowCreditsModal(true)
     }
-
-    fetchCredits()
-  }, [session, mounted])
+  }, [credits, creditsLoading])
 
   // Handle authentication states after mounting
   if (!mounted || status === 'loading') {
@@ -87,8 +76,13 @@ const DashboardPage = () => {
       }
 
       setGeneratedImage(data.imageUrl)
-      setCredits(data.remainingCredits)
+      updateCredits(data.remainingCredits)
       setError(null)
+      
+      // Check if credits are low after generation
+      if (data.remainingCredits < 3) {
+        setTimeout(() => setShowLowCreditsModal(true), 2000) // Show after 2 seconds
+      }
     } catch (error) {
       console.error('Error generating image:', error)
       setError(error instanceof Error ? error.message : 'Failed to generate image')
@@ -141,19 +135,38 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8" suppressHydrationWarning>
+    <div className="max-w-4xl mx-auto space-y-8">
+      {/* Low Credits Modal */}
+      <LowCreditsModal 
+        isOpen={showLowCreditsModal}
+        onClose={() => setShowLowCreditsModal(false)}
+        currentCredits={credits}
+      />
+
       {/* Welcome Section */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">Welcome back, {session?.user?.name}!</h1>
         <p className="text-muted-foreground">
           Create stunning images with AI. Just describe what you want to see.
         </p>
-        {!loading && (
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <span className="text-sm text-muted-foreground">Available Credits:</span>
-            <span className="font-semibold text-lg">{credits}</span>
-            {credits < 3 && (
-              <AlertCircle className="w-4 h-4 text-yellow-500" />
+        {!creditsLoading && (
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Available Credits:</span>
+              <span className="font-semibold text-lg">{credits}</span>
+              {credits < 3 && (
+                <AlertCircle className="w-4 h-4 text-yellow-500" />
+              )}
+            </div>
+            {credits < 5 && (
+              <Button
+                onClick={() => setShowLowCreditsModal(true)}
+                variant="outline"
+                size="sm"
+                className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                Get More Credits
+              </Button>
             )}
           </div>
         )}

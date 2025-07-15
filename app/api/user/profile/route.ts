@@ -16,8 +16,8 @@ export async function GET() {
     }
 
     await connectDB()
-
-    const user = await User.findOne({ email: session.user.email }).select('name email profilePicture credits plan')
+    
+    const user = await User.findOne({ email: session.user.email })
     
     if (!user) {
       return NextResponse.json(
@@ -27,17 +27,15 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      name: user.name,
+      credits: user.credits || 0,
+      plan: user.plan || 'free',
       email: user.email,
-      profilePicture: user.profilePicture,
-      credits: user.credits,
-      plan: user.plan
+      name: user.name
     })
-
   } catch (error) {
-    console.error('Get user profile error:', error)
+    console.error('Error fetching user profile:', error)
     return NextResponse.json(
-      { error: 'Failed to get user profile' },
+      { error: 'Failed to fetch user profile' },
       { status: 500 }
     )
   }

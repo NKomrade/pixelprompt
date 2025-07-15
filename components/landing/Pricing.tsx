@@ -1,9 +1,11 @@
+'use client'
+
 import React from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Check } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const plans = [
 	{
@@ -12,37 +14,39 @@ const plans = [
 		period: '/month',
 		description: 'Perfect for trying out PixelPrompt',
 		features: [
-			'10 images per month',
+			'5 images per month',
 			'Basic quality (512x512)',
 			'Standard processing time',
 			'Community support'
 		],
 		cta: 'Get Started',
-		popular: false
+		popular: false,
+		credits: 5
 	},
 	{
 		name: 'Pro',
-		price: '₹19',
+		price: '₹49',
 		period: '/month',
 		description: 'For serious creators and professionals',
 		features: [
-			'500 images per month',
+			'50 images per month',
 			'High quality (up to 2K)',
 			'Priority processing',
 			'All artistic styles',
 			'Commercial license',
 			'Email support'
 		],
-		cta: 'Start Pro Trial',
-		popular: true
+		cta: 'Start Pro Plan',
+		popular: true,
+		credits: 50
 	},
 	{
-		name: 'Enterprise',
+		name: 'Advanced',
 		price: '₹99',
 		period: '/month',
 		description: 'For teams and high-volume usage',
 		features: [
-			'Unlimited images',
+			'200 images per month',
 			'Ultra-high quality (4K+)',
 			'Instant processing',
 			'Custom style training',
@@ -51,14 +55,25 @@ const plans = [
 			'Team collaboration',
 			'Advanced analytics'
 		],
-		cta: 'Contact Sales',
-		popular: false
+		cta: 'Get Advanced Plan',
+		popular: false,
+		credits: 200
 	}
 ]
 
 export const Pricing = () => {
+	const router = useRouter()
+	
+	const handlePlanClick = (planName: string) => {
+		if (planName === 'Free') {
+			router.push('/auth/signup')
+		} else {
+			router.push('/auth/signin')
+		}
+	}
+
 	return (
-		<section id="pricing" className="container mx-auto px-4 py-20 bg-secondary/20" suppressHydrationWarning>
+		<section id="pricing" className="container mx-auto px-4 py-20 bg-secondary/20">
 			<div className="text-center mb-16">
 				<h2 className="text-3xl lg:text-4xl font-bold mb-4">
 					Simple, Transparent Pricing
@@ -68,7 +83,7 @@ export const Pricing = () => {
 				</p>
 			</div>
 			
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto" suppressHydrationWarning>
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
 				{plans.map((plan, index) => (
 					<Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-2xl scale-105' : 'border-border'}`}>
 						{plan.popular && (
@@ -95,15 +110,12 @@ export const Pricing = () => {
 									</li>
 								))}
 							</ul>
-							<Button 
-								className="w-full" 
+							<Button
+								onClick={() => handlePlanClick(plan.name)}
 								variant={plan.popular ? 'default' : 'outline'}
-								size="lg"
-								asChild
+								className="w-full"
 							>
-								<Link href={plan.name === 'Enterprise' ? '/contact' : '/register'}>
-									{plan.cta}
-								</Link>
+								{plan.cta}
 							</Button>
 						</CardContent>
 					</Card>

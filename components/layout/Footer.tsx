@@ -6,7 +6,7 @@ import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 export const Footer = () => {
   return (
     <footer className="bg-secondary/10 border-t">
-      <div className="container mx-auto px-4 py-12 lg:py-16" suppressHydrationWarning>
+      <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-1 sm:col-span-2 lg:col-span-2">
@@ -37,7 +37,7 @@ export const Footer = () => {
           </div>
           
           {/* Product */}
-          <div suppressHydrationWarning>
+          <div>
             <h3 className="font-semibold mb-4 text-sm lg:text-base">Product</h3>
             <ul className="space-y-2 lg:space-y-3">
               <li>
@@ -64,7 +64,7 @@ export const Footer = () => {
           </div>
           
           {/* Company */}
-          <div suppressHydrationWarning>
+          <div>
             <h3 className="font-semibold mb-4 text-sm lg:text-base">Company</h3>
             <ul className="space-y-2 lg:space-y-3">
               <li>
@@ -91,9 +91,9 @@ export const Footer = () => {
           </div>
         </div>
         
-        <Separator className="my-6 lg:my-8" suppressHydrationWarning />
+        <Separator className="my-6 lg:my-8" />
         
-        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0" suppressHydrationWarning>
+        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
           <p className="text-muted-foreground text-xs lg:text-sm text-center lg:text-left">
             © 2024 PixelPrompt. All rights reserved.
           </p>

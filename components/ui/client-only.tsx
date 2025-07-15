@@ -15,10 +15,10 @@ const ClientOnly = ({ children, fallback = null }: ClientOnlyProps) => {
   }, [])
 
   if (!hasMounted) {
-    return <>{fallback}</>
+    return fallback
   }
 
-  return <>{children}</>
+  return children
 }
 
 export default ClientOnly

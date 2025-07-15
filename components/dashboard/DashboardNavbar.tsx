@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
+import { useCredits } from '@/contexts/CreditContext'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -14,35 +15,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { LogOut } from 'lucide-react'
 import CreditBadge from '@/components/ui/credit-badge'
+import LowCreditsModal from '@/components/ui/low-credits-modal'
 import { ModeToggle } from '@/components/ui/mode-toggle'
 import ClientOnly from '@/components/ui/client-only'
 
 const DashboardNavbar = () => {
   const { data: session } = useSession()
-  const [credits, setCredits] = useState<number>(0)
+  const { credits, loading } = useCredits()
   const [mounted, setMounted] = useState(false)
+  const [showLowCreditsModal, setShowLowCreditsModal] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  useEffect(() => {
-    const fetchCredits = async () => {
-      if (session?.user?.email && mounted) {
-        try {
-          const response = await fetch('/api/user/credits')
-          if (response.ok) {
-            const data = await response.json()
-            setCredits(data.credits)
-          }
-        } catch (error) {
-          console.error('Error fetching credits:', error)
-        }
-      }
-    }
-
-    fetchCredits()
-  }, [session, mounted])
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })
@@ -50,6 +35,13 @@ const DashboardNavbar = () => {
 
   return (
     <nav className="w-full px-4 py-4 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50 transition-all duration-300">
+      {/* Low Credits Modal */}
+      <LowCreditsModal 
+        isOpen={showLowCreditsModal}
+        onClose={() => setShowLowCreditsModal(false)}
+        currentCredits={credits}
+      />
+      
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center space-x-2 text-2xl font-bold text-primary">
@@ -66,7 +58,12 @@ const DashboardNavbar = () => {
           </ClientOnly>
           
           <ClientOnly fallback={<div className="w-16 h-6 bg-muted rounded animate-pulse" />}>
-            <CreditBadge credits={credits} />
+            {!loading && (
+              <CreditBadge 
+                credits={credits} 
+                onClick={() => credits < 5 ? setShowLowCreditsModal(true) : undefined}
+              />
+            )}
           </ClientOnly>
 
           {/* User Profile */}

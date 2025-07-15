@@ -14,12 +14,3 @@ export function Providers({ children }: ProvidersProps) {
     </SessionProvider>
   )
 }
-
-// Future: Add Razorpay Provider when implementing payments
-// export function PaymentProvider({ children }: { children: ReactNode }) {
-//   return (
-//     <div>
-//       {children}
-//     </div>
-//   )
-// }

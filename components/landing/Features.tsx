@@ -47,9 +47,9 @@ export const Features = () => {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" suppressHydrationWarning>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {features.map((feature, index) => (
-          <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1" suppressHydrationWarning>
+          <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="pb-4">
               <div className="w-10 h-10 lg:w-12 lg:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <feature.icon className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />

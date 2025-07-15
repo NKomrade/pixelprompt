@@ -1,6 +1,25 @@
-import mongoose from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+interface IUser extends Document {
+  name: string
+  email: string
+  password: string
+  profilePicture?: string
+  credits: number
+  plan: string
+  paymentHistory: Array<{
+    orderId: string
+    paymentId: string
+    amount: number
+    planId: string
+    date: Date
+    type: 'free_plan' | 'razorpay_payment'
+  }>
+  createdAt: Date
+  updatedAt: Date
+}
+
+const userSchema = new Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -20,26 +39,23 @@ const userSchema = new mongoose.Schema({
   },
   credits: {
     type: Number,
-    default: 5,
+    default: 5, // Free users get 5 credits
   },
   plan: {
     type: String,
-    enum: ['basic', 'medium', 'advance'],
-    default: 'basic',
+    enum: ['free', 'pro', 'advanced', 'basic'],
+    default: 'free',
   },
-  createdAt: {
-    type: Date,
-    default: () => new Date(),
-  },
-  updatedAt: {
-    type: Date,
-    default: () => new Date(),
-  },
+  paymentHistory: [{
+    orderId: String,
+    paymentId: String,
+    amount: Number,
+    planId: String,
+    date: { type: Date, default: Date.now },
+    type: { type: String, enum: ['free_plan', 'razorpay_payment'], default: 'razorpay_payment' }
+  }],
+}, {
+  timestamps: true,
 })
 
-userSchema.pre('save', function(next) {
-  this.updatedAt = new Date()
-  next()
-})
-
-export default mongoose.models.User || mongoose.model('User', userSchema)
+export default mongoose.models.User || mongoose.model<IUser>('User', userSchema)

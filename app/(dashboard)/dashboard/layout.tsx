@@ -1,5 +1,4 @@
 import React from 'react'
-// import DashboardNavbar from '@/components/dashboard/DashboardNavbar'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -7,8 +6,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <div className="min-h-screen bg-background" suppressHydrationWarning>
-      {/* <DashboardNavbar /> */}
+    <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8">
         {children}
       </main>
