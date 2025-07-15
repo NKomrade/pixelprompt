@@ -25,7 +25,7 @@ export const CreditProvider: React.FC<CreditProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null)
 
   const fetchCredits = async () => {
-    if (!session?.user?.email) {
+    if (!session?.user?.email || status !== 'authenticated') {
       setCredits(0)
       setLoading(false)
       return
@@ -65,6 +65,11 @@ export const CreditProvider: React.FC<CreditProviderProps> = ({ children }) => {
 
   // Fetch credits when session changes
   useEffect(() => {
+    if (status === 'loading') {
+      setLoading(true)
+      return
+    }
+    
     if (status === 'authenticated' && session?.user?.email) {
       fetchCredits()
     } else if (status === 'unauthenticated') {

@@ -119,7 +119,6 @@ export default function LowCreditsWarning({ credits }: LowCreditsWarningProps) {
                       </ul>
                       <PaymentButton
                         planName={plan.name}
-                        planPrice={plan.price}
                         credits={plan.credits}
                         buttonText={plan.cta}
                         variant={plan.popular ? 'default' : 'outline'}
