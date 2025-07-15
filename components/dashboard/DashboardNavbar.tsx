@@ -22,12 +22,7 @@ import ClientOnly from '@/components/ui/client-only'
 const DashboardNavbar = () => {
   const { data: session } = useSession()
   const { credits, loading } = useCredits()
-  const [mounted, setMounted] = useState(false)
   const [showLowCreditsModal, setShowLowCreditsModal] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' })

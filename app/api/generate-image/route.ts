@@ -68,9 +68,9 @@ export async function POST(request: Request) {
           success = true
         }
       }
-    } catch (error: any) {
-      console.log('❌ Pollinations AI failed:', error.message)
-      lastError = error.message
+    } catch (error) {
+      console.log('❌ Pollinations AI failed:', error instanceof Error ? error.message : 'Unknown error')
+      lastError = error instanceof Error ? error.message : 'Unknown error'
     }
 
     // Fallback to Lexica Art (existing AI art search)
@@ -88,9 +88,9 @@ export async function POST(request: Request) {
             success = true
           }
         }
-      } catch (error: any) {
-        console.log('❌ Lexica Art failed:', error.message)
-        lastError = error.message
+      } catch (error) {
+        console.log('❌ Lexica Art failed:', error instanceof Error ? error.message : 'Unknown error')
+        lastError = error instanceof Error ? error.message : 'Unknown error'
       }
     }
 
@@ -108,9 +108,9 @@ export async function POST(request: Request) {
           console.log('✅ Generated placeholder')
           success = true
         }
-      } catch (error: any) {
-        console.log('❌ Placeholder failed:', error.message)
-        lastError = error.message
+      } catch (error) {
+        console.log('❌ Placeholder failed:', error instanceof Error ? error.message : 'Unknown error')
+        lastError = error instanceof Error ? error.message : 'Unknown error'
       }
     }
 
