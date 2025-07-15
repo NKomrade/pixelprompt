@@ -9,21 +9,49 @@ import { toast } from 'react-hot-toast'
 
 interface PaymentButtonProps {
   planName: string
-  planPrice: string
   credits: number
   buttonText: string
   variant?: 'default' | 'outline'
 }
 
+interface RazorpayResponse {
+  razorpay_payment_id: string
+  razorpay_order_id: string
+  razorpay_signature: string
+}
+
+interface RazorpayOptions {
+  key: string
+  amount: number
+  currency: string
+  name: string
+  description: string
+  order_id: string
+  handler: (response: RazorpayResponse) => void
+  prefill: {
+    name: string
+    email: string
+  }
+  theme: {
+    color: string
+  }
+  modal: {
+    ondismiss: () => void
+  }
+}
+
+interface RazorpayInstance {
+  open: () => void
+}
+
 declare global {
   interface Window {
-    Razorpay: any
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance
   }
 }
 
 export default function PaymentButton({ 
   planName, 
-  planPrice, 
   credits, 
   buttonText,
   variant = 'default'
@@ -111,7 +139,7 @@ export default function PaymentButton({
         name: 'PixelPrompt',
         description: `${planName} Plan - ${credits} Credits`,
         order_id: orderData.orderId,
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
             // Verify payment
             const verifyRes = await fetch('/api/payments/verify', {

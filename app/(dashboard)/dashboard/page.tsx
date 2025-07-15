@@ -10,7 +10,6 @@ import ImageGenerationSkeleton from '@/components/ui/image-generation-skeleton'
 import LowCreditsModal from '@/components/ui/low-credits-modal'
 import { Send, Loader2, ImageIcon, AlertCircle, Download } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import { toast } from 'react-hot-toast'
 
 const DashboardPage = () => {
   const { data: session, status } = useSession()

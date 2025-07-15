@@ -179,7 +179,7 @@ export default function LoginPage() {
           </Button>
 
           <div className="text-center text-sm">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="underline text-primary hover:text-primary/80">
               Sign up
             </Link>
